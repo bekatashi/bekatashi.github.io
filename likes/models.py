@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Likes(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
 
     class Meta:

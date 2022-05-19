@@ -23,3 +23,8 @@ class Comment(models.Model):
     #     ordering = ('created_at',)
 
     def __str__(self): return f'{self.owner} - {self.body}'
+
+
+class Favorites(models.Model):
+    product = models.ForeignKey(Product, related_name='favorite', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='favorite', on_delete=models.CASCADE)

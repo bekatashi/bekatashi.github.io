@@ -1,6 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 
 from products import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('favorites', views.FavoritesViewset, basename='Favorites')
 
 urlpatterns = [
     path('products/', views.ProductListView.as_view()),
@@ -12,4 +16,9 @@ urlpatterns = [
     # Comment urls
     path('comments/', views.CommentListCreateView.as_view()),
     path('comments/<int:pk>/', views.CommentDetailView.as_view()),
+
+    # Favorities Urls
+    path('', include(router.urls)),
+
+
 ]

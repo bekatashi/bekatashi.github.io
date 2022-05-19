@@ -28,7 +28,20 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'password', 'password2', ' last_name',)
+        fields = '__all__'
+        # fields = ('email', 'first_name', 'last_name',)
+
+
+    def to_representation(self, instance):
+        from products.serializers import FavoritesSerializer, ProductSerializer
+        from likes.serializers import LikesSerializer
+        representation = super().to_representation(instance)
+        representation['likes'] = LikesSerializer(instance.likes, many=True).data
+        if instance.is_superuser is True:
+            representation['products'] = ProductSerializer(instance.products, many=True).data
+
+        representation['favorites'] = FavoritesSerializer(instance.favorite, many=True).data
+        return representation
 
 
 class SuperUserCreateSerializer(serializers.ModelSerializer):
@@ -50,3 +63,14 @@ class SuperUserCreateSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_superuser(**validated_data)
 
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        exclude = ('is_staff', 'is_superuser', 'is_active', 'password', 'activation_code', 'user_permissions')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['likes'] = instance.likes.all()
+        return representation

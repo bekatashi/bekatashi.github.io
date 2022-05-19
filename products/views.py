@@ -3,10 +3,11 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from . import serializers
-from . models import Product, Comment
+from . models import Product, Comment, Favorites
 from products.serializers import ProductSerializer
 from . permissions import IsAuthor, IsSuperUser
 from rest_framework import views
+from rest_framework.viewsets import ModelViewSet
 
 
 class PaginationClass(PageNumberPagination):
@@ -60,6 +61,13 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
 
 
-# class ImageDeleteView(views.APIView):
-#     queryset = Product.objects.all()
-#     def delete(self,):
+class FavoritesViewset(ModelViewSet):
+    class Meta:
+        fields = '__all__'
+        model = Favorites
+    queryset = Favorites.objects.all()
+    serializer_class = serializers.FavoritesSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
