@@ -6,6 +6,7 @@ from . import serializers
 from . models import Product, Comment
 from products.serializers import ProductSerializer
 from . permissions import IsAuthor, IsSuperUser
+from rest_framework import views
 
 
 class PaginationClass(PageNumberPagination):
@@ -44,6 +45,7 @@ class ProductUpdateView(generics.UpdateAPIView):
 class ProductDeleteView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = (IsAuthor,)
 
 
 class CommentListCreateView(generics.ListCreateAPIView):
@@ -51,12 +53,13 @@ class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = serializers.CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def perform_create(self, serializer):
-        return serializer.save(owner=self.request.user)
-
 
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = serializers.CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
 
+
+# class ImageDeleteView(views.APIView):
+#     queryset = Product.objects.all()
+#     def delete(self,):

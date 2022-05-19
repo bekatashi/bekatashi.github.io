@@ -6,7 +6,7 @@ from . models import Product, Comment
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ('author', )
 
 
 class CommentSerializer(serializers.ModelSerializer):

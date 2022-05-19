@@ -47,18 +47,20 @@ class LogOutView(LogoutView):
 
 
 class UserDetailView(generics.RetrieveAPIView):
-    permission_classes = IsSelfUser
+    queryset = CustomUser.objects.all()
+    permission_classes = (IsSelfUser,)
     serializer_class = serializers.UserDetailSerializer
+
 
 class CreateSuperUserView(views.APIView):
 
     def post(self, request):
-        serializer = serializers.RegistrationSerializer(data=request.data)
+        serializer = serializers.SuperUserCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             if user:
                 send_conformation_email(user)
                 context_instance = RequestContext(request)
-            return Response(serializer.data, status=status.HTTP_200_OK,)
+            return Response('We have send you an activation code, please check your email', status=status.HTTP_200_OK,)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

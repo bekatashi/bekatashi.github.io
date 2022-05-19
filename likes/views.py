@@ -9,8 +9,9 @@ class LikesView(generics.ListAPIView):
 
 
 class LikesCreateView(generics.CreateAPIView):
-    permission_classes = permissions.AllowAny
+    permission_classes = (permissions.AllowAny,)
     queryset = Likes.objects.all()
+    serializer_class = LikesSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
