@@ -39,7 +39,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         representation['likes'] = LikesSerializer(instance.likes, many=True).data
         if instance.is_superuser is True:
             representation['products'] = ProductSerializer(instance.products, many=True).data
-
+        representation['orders'] = instance.user.all()
         representation['favorites'] = FavoritesSerializer(instance.favorite, many=True).data
         return representation
 
