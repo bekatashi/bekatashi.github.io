@@ -26,7 +26,7 @@ class RegistrationView(views.APIView):
             user = serializer.save()
             if user:
                 send_conformation_email(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response('we have send an activation code to ur email', status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
